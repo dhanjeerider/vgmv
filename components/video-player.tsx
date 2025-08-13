@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, ExternalLink } from "lucide-react"
+import { ExternalLink, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -76,6 +76,33 @@ export function VideoPlayer({ isOpen, onClose, item, season, episode }: VideoPla
     }
   }
 
+  const handleDownload = () => {
+    if (!item) return
+
+    const tmdbId = item.id
+    const currentImdbId = imdbId || item.imdb_id || item.external_ids?.imdb_id || ""
+
+    let downloadUrl = ""
+
+    if (isTV) {
+      // For TV shows: use IMDb ID if available, otherwise TMDB ID
+      if (currentImdbId) {
+        downloadUrl = `https://dl.vidsrc.vip/tv/${currentImdbId}/${currentSeason}/${currentEpisode}`
+      } else {
+        downloadUrl = `https://dl.vidsrc.vip/tv/${tmdbId}/${currentSeason}/${currentEpisode}`
+      }
+    } else {
+      // For movies: use IMDb ID if available, otherwise TMDB ID
+      if (currentImdbId) {
+        downloadUrl = `https://dl.vidsrc.vip/movie/${currentImdbId}`
+      } else {
+        downloadUrl = `https://dl.vidsrc.vip/movie/${tmdbId}`
+      }
+    }
+
+    window.open(downloadUrl, "_blank")
+  }
+
   if (!item) return null
 
   return (
@@ -84,7 +111,16 @@ export function VideoPlayer({ isOpen, onClose, item, season, episode }: VideoPla
         <DialogHeader className="p-4 border-b border-border">
           <div className="flex items-center justify-around">
             <DialogTitle className="text-card-foreground text-lg">{title}</DialogTitle>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleDownload}
+                className="text-muted-foreground hover:text-foreground bg-lime-500/10 hover:bg-lime-500/20"
+                title="Download movie/episode"
+              >
+                <Download className="w-4 h-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
@@ -94,7 +130,6 @@ export function VideoPlayer({ isOpen, onClose, item, season, episode }: VideoPla
               >
                 <ExternalLink className="w-4 h-4" />
               </Button>
-              
             </div>
           </div>
         </DialogHeader>
@@ -198,7 +233,7 @@ export function VideoPlayer({ isOpen, onClose, item, season, episode }: VideoPla
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground mt-1">
-                Currently playing from: <span className="text-orange-500">{selectedServer.name}</span>
+                Currently playing from: <span className="text-lime-500">{selectedServer.name}</span>
               </p>
             </div>
 

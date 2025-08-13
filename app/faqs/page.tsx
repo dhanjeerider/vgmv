@@ -4,22 +4,21 @@ import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { BottomNav } from "@/components/bottom-nav"
 import { SearchBar } from "@/components/search-bar"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { BackToTop } from "@/components/back-to-top"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
-import { User, Search, ChevronDown, ChevronUp, HelpCircle } from "lucide-react"
+import { User, Search, ChevronDown, ChevronUp, HelpCircle, Shield, Globe } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 const faqs = [
   {
     id: 1,
     category: "General",
-    question: "Is StreamFlix really free?",
+    question: "Is VegaMovies really free?",
     answer:
-      "Yes! StreamFlix is completely free to use. We provide access to movies and TV shows without any subscription fees. Our service is supported by optional donations and partnerships.",
+      "Yes! VegaMovies is completely free to use. We provide access to movies and TV shows without any subscription fees. Our service is supported by optional donations and partnerships.",
   },
   {
     id: 2,
@@ -33,7 +32,7 @@ const faqs = [
     category: "Streaming",
     question: "Why isn't a video playing?",
     answer:
-      "If a video isn't playing, try switching to a different server using the dropdown menu below the player. We provide multiple servers to ensure the best viewing experience.",
+      "If a video isn't playing, try switching to a different server using the dropdown menu below the player. We provide multiple servers to ensure the best viewing experience. You can also try refreshing the page or clearing your browser cache.",
   },
   {
     id: 4,
@@ -47,14 +46,14 @@ const faqs = [
     category: "Streaming",
     question: "Can I download movies and TV shows?",
     answer:
-      "Yes! Click the download button in the video player to access download links. Please note that download availability depends on the selected server.",
+      "Yes! Click the download button in the video player to access download links. Please note that download availability depends on the selected server and content availability.",
   },
   {
     id: 6,
     category: "Technical",
     question: "Which browsers are supported?",
     answer:
-      "StreamFlix works on all modern browsers including Chrome, Firefox, Safari, and Edge. For the best experience, we recommend using the latest version of your browser.",
+      "VegaMovies works on all modern browsers including Chrome, Firefox, Safari, and Edge. For the best experience, we recommend using the latest version of your browser.",
   },
   {
     id: 7,
@@ -80,13 +79,48 @@ const faqs = [
   {
     id: 10,
     category: "Mobile",
-    question: "Does StreamFlix work on mobile devices?",
+    question: "Does VegaMovies work on mobile devices?",
     answer:
-      "Yes! StreamFlix is fully responsive and works great on smartphones and tablets. You can also add it to your home screen for a native app-like experience.",
+      "Yes! VegaMovies is fully responsive and works great on smartphones and tablets. You can also add it to your home screen for a native app-like experience.",
+  },
+  {
+    id: 11,
+    category: "VPN",
+    question: "Why do I need a VPN for VegaMovies?",
+    answer:
+      "Some ISPs (especially Jio users in India) may block access to streaming sites. A VPN helps bypass these restrictions and provides faster, more reliable access to VegaMovies content.",
+  },
+  {
+    id: 12,
+    category: "VPN",
+    question: "Which VPN should I use?",
+    answer:
+      "We recommend using reliable VPN services like ExpressVPN, NordVPN, or Surfshark. Free VPNs like ProtonVPN or Windscribe also work well. Choose servers in countries like USA, UK, or Canada for best performance.",
+  },
+  {
+    id: 13,
+    category: "VPN",
+    question: "How to set up VPN for VegaMovies?",
+    answer:
+      "1. Download a VPN app from your app store. 2. Create an account and choose a server location. 3. Connect to the VPN. 4. Open VegaMovies in your browser. 5. Enjoy fast, unrestricted streaming!",
+  },
+  {
+    id: 14,
+    category: "Troubleshooting",
+    question: "VegaMovies is not loading, what should I do?",
+    answer:
+      "If VegaMovies is not loading: 1. Try using a VPN (especially for Jio users). 2. Clear your browser cache and cookies. 3. Try a different browser. 4. Check your internet connection. 5. Try accessing the site in incognito/private mode.",
+  },
+  {
+    id: 15,
+    category: "Troubleshooting",
+    question: "Video keeps buffering or stops playing",
+    answer:
+      "For buffering issues: 1. Switch to a different server in the player. 2. Lower the video quality if available. 3. Pause the video for 30 seconds to let it buffer. 4. Check your internet speed. 5. Try using a VPN for better connection.",
   },
 ]
 
-const categories = ["All", "General", "Streaming", "Technical", "Content", "Mobile"]
+const categories = ["All", "General", "Streaming", "Technical", "Content", "Mobile", "VPN", "Troubleshooting"]
 
 export default function FAQsPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -120,7 +154,6 @@ export default function FAQsPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -136,10 +169,91 @@ export default function FAQsPage() {
         <div className="p-4 md:p-6 max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-8">
-            <HelpCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+            <HelpCircle className="w-16 h-16 text-lime-500 mx-auto mb-4" />
             <h2 className="text-3xl font-bold mb-2">Frequently Asked Questions</h2>
-            <p className="text-gray-400">Find answers to common questions about StreamFlix</p>
+            <p className="text-gray-400">Find answers to common questions about VegaMovies</p>
           </div>
+
+          <Card className="bg-gradient-to-r from-lime-500/10 to-green-500/10 border-lime-500/20 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Globe className="w-5 h-5 text-lime-500" />
+                About VegaMovies - Your Ultimate Streaming Destination
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-gray-300 leading-relaxed space-y-4">
+              <p>
+                <strong>VegaMovies</strong> is the premier online streaming platform offering an extensive collection of
+                movies, TV shows, web series, and documentaries. Our platform provides free access to the latest
+                Bollywood movies, Hollywood blockbusters, South Indian cinema, and regional content in multiple
+                languages including Hindi, Tamil, Telugu, Malayalam, Punjabi, and Marathi.
+              </p>
+              <p>
+                Watch high-quality content in HD, Full HD, and 4K resolution with multiple server options for
+                uninterrupted streaming. VegaMovies features the latest movie releases, trending TV shows, classic
+                films, and exclusive web series from popular OTT platforms. Our user-friendly interface makes it easy to
+                discover new content with smart recommendations and advanced search filters.
+              </p>
+              <p>
+                Experience seamless streaming with our multi-device compatibility, fast loading servers, and ad-blocking
+                technology. VegaMovies supports all devices including smartphones, tablets, laptops, and smart TVs. Join
+                millions of users who trust VegaMovies for their entertainment needs - no registration required,
+                completely free, and always updated with the latest content.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Shield className="w-5 h-5 text-blue-500" />
+                VPN Guide for Better Streaming Experience
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-gray-300 leading-relaxed space-y-4">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lime-500 font-semibold mb-2">Why Use VPN with VegaMovies?</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li>• Bypass ISP restrictions (especially for Jio users)</li>
+                    <li>• Faster streaming speeds and reduced buffering</li>
+                    <li>• Access geo-blocked content</li>
+                    <li>• Enhanced privacy and security</li>
+                    <li>• Stable connection for uninterrupted viewing</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-lime-500 font-semibold mb-2">Recommended VPN Services</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li>
+                      • <strong>ExpressVPN</strong> - Premium, fastest speeds
+                    </li>
+                    <li>
+                      • <strong>NordVPN</strong> - Great security features
+                    </li>
+                    <li>
+                      • <strong>Surfshark</strong> - Budget-friendly option
+                    </li>
+                    <li>
+                      • <strong>ProtonVPN</strong> - Free tier available
+                    </li>
+                    <li>
+                      • <strong>Windscribe</strong> - Good free option
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg">
+                <h4 className="text-lime-500 font-semibold mb-2">Quick Setup Guide:</h4>
+                <ol className="space-y-1 text-sm">
+                  <li>1. Download and install a VPN app on your device</li>
+                  <li>2. Create an account and choose a subscription plan</li>
+                  <li>3. Connect to a server (USA, UK, or Canada recommended)</li>
+                  <li>4. Open VegaMovies and enjoy unrestricted streaming!</li>
+                </ol>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Search */}
           <div className="relative mb-6">
@@ -162,7 +276,7 @@ export default function FAQsPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={
                   selectedCategory === category
-                    ? "bg-orange-500 hover:bg-orange-600 text-white"
+                    ? "bg-lime-500 hover:bg-lime-600 text-black font-semibold"
                     : "border-gray-600 text-gray-300 hover:bg-gray-800"
                 }
               >
@@ -182,7 +296,7 @@ export default function FAQsPage() {
                         <div className="flex items-center justify-between">
                           <div className="text-left">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">
+                              <span className="text-xs bg-lime-500/20 text-lime-400 px-2 py-1 rounded">
                                 {faq.category}
                               </span>
                             </div>
@@ -217,12 +331,17 @@ export default function FAQsPage() {
             <CardHeader>
               <CardTitle className="text-white">Still need help?</CardTitle>
               <CardDescription className="text-gray-400">
-                Can't find what you're looking for? Get in touch with our support team.
+                Can't find what you're looking for? Join our Telegram channel for instant support and updates.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">Contact Support</Button>
+                <Button
+                  className="bg-lime-500 hover:bg-lime-600 text-black font-semibold"
+                  onClick={() => window.open("https://t.me/dkmvgp", "_blank")}
+                >
+                  Join Telegram Support
+                </Button>
                 <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 bg-transparent">
                   Report an Issue
                 </Button>
