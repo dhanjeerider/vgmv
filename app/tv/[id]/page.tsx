@@ -133,7 +133,7 @@ export default function TVDetailPage() {
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-3 w-30">
+            <div className="flex items-center gap-3 flex-1">
               <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                 <Film className="w-5 h-5 text-white" />
               </div>
@@ -156,7 +156,7 @@ export default function TVDetailPage() {
 
  
         {/* Hero Section with contained backdrop and absolute poster */}
-        <div className="relative overflow-hidden mx-4 md:mx-6 mt-4 rounded-xl h-[30vh] md:h-[80vh] lg:h-[80vh]">
+        <div className="relative overflow-hidden mx-4 md:mx-6 mt-4 rounded-xl h-[30vh] lg:h-[80vh]">
           <div className="absolute inset-0">
             <Image
               src={getImageUrl(tvShow.backdrop_path, "w780") || "/placeholder.svg"}

@@ -85,7 +85,7 @@ export function MovieCard({ item, onPlay, onAddToWatchlist, className }: MovieCa
         </div>
 
         <div className="p-3 space-y-2">
-          <h3 className="font-semibold truncate text-foreground text-sm line-clamp-2 leading-tight select-none">{title}</h3>
+          <h3 className="font-semibold truncate text-foreground text-sm line-clamp-2 leading-tight select-none text-center">{title}</h3>
          
         </div>
       </div>

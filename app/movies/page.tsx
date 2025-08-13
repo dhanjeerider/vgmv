@@ -140,7 +140,7 @@ export default function MoviesPage() {
 
         {/* Title and Filters */}
         <div className="p-4 md:p-6">
-          <h1 className="text-2xl font-bold mb-4">Movies</h1>
+          <h1 className="text-2xl font-bold mb-4 select-none">Movies</h1>
 
           <div className="flex flex-wrap items-center gap-4 mb-6">
             <Select value={selectedGenre} onValueChange={setSelectedGenre}>

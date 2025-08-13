@@ -26,7 +26,7 @@ export default function ProfilePage() {
   const [selectedItem, setSelectedItem] = useState<Movie | TVShow | null>(null)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
   const [profileImage, setProfileImage] = useState<string>("")
-  const [username, setUsername] = useState("dktechnozone")
+  const [username, setUsername] = useState("Vegamovies")
 
   const router = useRouter()
 

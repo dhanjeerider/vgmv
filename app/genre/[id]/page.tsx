@@ -134,11 +134,11 @@ export default function GenrePage() {
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" onClick={() => router.push("/")}>
               <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                 <Film className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold hidden md:block">Vega Movies</span>
+              <span className="text-xl font-bold hidden cursor-pointer select-none md:block">Vega Movies</span>
             </div>
             <SearchBar onResultClick={handlePlay} />
           </div>

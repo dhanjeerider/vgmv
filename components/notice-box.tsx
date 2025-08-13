@@ -47,12 +47,15 @@ export function NoticeBox() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-lime-400 to-green-400 bg-clip-text text-transparent mb-3">
-                  🎬 Welcome to VegaMovies - Your Ultimate Entertainment Hub
+                  Welcome to VegaMovies - Your Ultimate Entertainment Hub
                 </h3>
                 <p className="text-gray-300 text-base leading-relaxed mb-6 max-w-4xl mx-auto">
                   Stream the latest movies and TV shows in HD quality. Enjoy Hollywood blockbusters, Bollywood hits,
                   regional cinema, and international content. Our vast library includes new releases, trending series,
                   classic films, and exclusive web series across all genres.
+                </p>
+                 <p className="text-gray-300 text-base leading-relaxed mb-6 max-w-4xl mx-auto">
+                  Note : - we didn't store any file on our server bicouse we dont have server we are using third party api and server and you can face ads on player owned by third party sites
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
