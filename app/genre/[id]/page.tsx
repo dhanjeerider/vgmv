@@ -42,37 +42,70 @@ export default function GenrePage() {
   const [selectedItem, setSelectedItem] = useState<Movie | TVShow | null>(null)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   const genreId = Number.parseInt(params.id as string)
 
   useEffect(() => {
+    setPage(1)
+    setHasMore(true)
     loadGenreData()
   }, [genreId, mediaType, language, sortBy])
 
-  const loadGenreData = async () => {
-    setIsLoading(true)
+  const loadGenreData = async (pageNum = 1, append = false) => {
+    if (pageNum === 1) {
+      setIsLoading(true)
+    } else {
+      setIsLoadingMore(true)
+    }
+
     try {
       const genresResponse = await tmdbApi.getGenres(mediaType)
       const genre = genresResponse.genres.find((g: any) => g.id === genreId)
       setGenreName(genre?.name || searchParams.get("name") || "Unknown Genre")
 
-      let url = `https://api.themoviedb.org/3/discover/${mediaType}?api_key=7bffed716d50c95ed1c4790cfab4866a&with_genres=${genreId}&sort_by=${sortBy}&page=1`
+      const data = await tmdbApi.getByGenre(genreId, mediaType, pageNum)
+
+      let filteredResults = data.results || []
 
       if (language !== "all") {
-        url += `&with_original_language=${language}`
+        filteredResults = filteredResults.filter((item: any) => item.original_language === language)
       }
 
-      console.log("Loading genre data:", { mediaType, genreId, url })
-      const response = await fetch(url)
-      const data = await response.json()
-      console.log("Genre data response:", data)
-      setItems(data.results || [])
+      if (sortBy === "vote_average.desc") {
+        filteredResults.sort((a: any, b: any) => b.vote_average - a.vote_average)
+      } else if (sortBy === "release_date.desc") {
+        filteredResults.sort((a: any, b: any) => {
+          const dateA = new Date(a.release_date || a.first_air_date || 0)
+          const dateB = new Date(b.release_date || b.first_air_date || 0)
+          return dateB.getTime() - dateA.getTime()
+        })
+      }
+
+      console.log("Genre data loaded:", { mediaType, genreId, count: filteredResults.length })
+
+      if (append) {
+        setItems((prev) => [...prev, ...filteredResults])
+      } else {
+        setItems(filteredResults)
+      }
+
+      setHasMore(pageNum < (data.total_pages || 1))
     } catch (error) {
       console.error("Error loading genre data:", error)
-      setItems([])
+      if (!append) setItems([])
     } finally {
       setIsLoading(false)
+      setIsLoadingMore(false)
     }
+  }
+
+  const loadMoreItems = () => {
+    const nextPage = page + 1
+    setPage(nextPage)
+    loadGenreData(nextPage, true)
   }
 
   const handlePlay = (item: Movie | TVShow) => {
@@ -172,11 +205,32 @@ export default function GenrePage() {
               ))}
             </div>
           ) : items.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {items.map((item) => (
-                <MovieCard key={item.id} item={item} onPlay={handlePlay} onAddToWatchlist={handleAddToWatchlist} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {items.map((item) => (
+                  <MovieCard key={item.id} item={item} onPlay={handlePlay} onAddToWatchlist={handleAddToWatchlist} />
+                ))}
+              </div>
+
+              {hasMore && (
+                <div className="flex justify-center mt-8">
+                  <Button
+                    onClick={loadMoreItems}
+                    disabled={isLoadingMore}
+                    className="bg-gradient-to-r from-lime-500 to-green-600 hover:from-lime-600 hover:to-green-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                        Loading...
+                      </>
+                    ) : (
+                      "Load More"
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg">

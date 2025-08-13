@@ -50,31 +50,57 @@ export interface Cast {
   profile_path: string
 }
 
+const fetchWithProxy = async (url: string) => {
+  try {
+    // Try direct fetch first
+    const response = await fetch(url)
+    if (response.ok) {
+      return response
+    }
+  } catch (error) {
+    console.log("Direct fetch failed, trying proxy...")
+  }
+
+  // If direct fetch fails, use proxy
+  try {
+    const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`
+    const response = await fetch(proxyUrl)
+    return response
+  } catch (error) {
+    console.error("Proxy fetch failed:", error)
+    throw error
+  }
+}
+
 export const tmdbApi = {
-  getTrending: async (mediaType: "movie" | "tv" = "movie", timeWindow: "day" | "week" = "week") => {
-    const response = await fetch(`${TMDB_BASE_URL}/trending/${mediaType}/${timeWindow}?api_key=${TMDB_API_KEY}`)
+  getTrending: async (mediaType: "movie" | "tv" = "movie", timeWindow: "day" | "week" = "week", page = 1) => {
+    const response = await fetchWithProxy(
+      `${TMDB_BASE_URL}/trending/${mediaType}/${timeWindow}?api_key=${TMDB_API_KEY}&page=${page}`,
+    )
     return response.json()
   },
 
-  getPopular: async (mediaType: "movie" | "tv" = "movie") => {
-    const response = await fetch(`${TMDB_BASE_URL}/${mediaType}/popular?api_key=${TMDB_API_KEY}`)
+  getPopular: async (mediaType: "movie" | "tv" = "movie", page = 1) => {
+    const response = await fetchWithProxy(`${TMDB_BASE_URL}/${mediaType}/popular?api_key=${TMDB_API_KEY}&page=${page}`)
     return response.json()
   },
 
-  getTopRated: async (mediaType: "movie" | "tv" = "movie") => {
-    const response = await fetch(`${TMDB_BASE_URL}/${mediaType}/top_rated?api_key=${TMDB_API_KEY}`)
+  getTopRated: async (mediaType: "movie" | "tv" = "movie", page = 1) => {
+    const response = await fetchWithProxy(
+      `${TMDB_BASE_URL}/${mediaType}/top_rated?api_key=${TMDB_API_KEY}&page=${page}`,
+    )
     return response.json()
   },
 
-  getByGenre: async (genreId: number, mediaType: "movie" | "tv" = "movie") => {
-    const response = await fetch(
-      `${TMDB_BASE_URL}/discover/${mediaType}?api_key=${TMDB_API_KEY}&with_genres=${genreId}`,
+  getByGenre: async (genreId: number, mediaType: "movie" | "tv" = "movie", page = 1) => {
+    const response = await fetchWithProxy(
+      `${TMDB_BASE_URL}/discover/${mediaType}?api_key=${TMDB_API_KEY}&with_genres=${genreId}&page=${page}`,
     )
     return response.json()
   },
 
   getMovieDetails: async (movieId: number) => {
-    const response = await fetch(
+    const response = await fetchWithProxy(
       `${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&append_to_response=external_ids,credits,videos,similar`,
     )
     const data = await response.json()
@@ -88,7 +114,7 @@ export const tmdbApi = {
   },
 
   getTVDetails: async (tvId: number) => {
-    const response = await fetch(
+    const response = await fetchWithProxy(
       `${TMDB_BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}&append_to_response=external_ids,credits,videos,similar`,
     )
     const data = await response.json()
@@ -102,25 +128,25 @@ export const tmdbApi = {
   },
 
   search: async (query: string) => {
-    const response = await fetch(
+    const response = await fetchWithProxy(
       `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`,
     )
     return response.json()
   },
 
   getGenres: async (mediaType: "movie" | "tv" = "movie") => {
-    const response = await fetch(`${TMDB_BASE_URL}/genre/${mediaType}/list?api_key=${TMDB_API_KEY}`)
+    const response = await fetchWithProxy(`${TMDB_BASE_URL}/genre/${mediaType}/list?api_key=${TMDB_API_KEY}`)
     return response.json()
   },
 
   // New method to get external IDs separately if needed
   getExternalIds: async (id: number, mediaType: "movie" | "tv" = "movie") => {
-    const response = await fetch(`${TMDB_BASE_URL}/${mediaType}/${id}/external_ids?api_key=${TMDB_API_KEY}`)
+    const response = await fetchWithProxy(`${TMDB_BASE_URL}/${mediaType}/${id}/external_ids?api_key=${TMDB_API_KEY}`)
     return response.json()
   },
 }
 
-export const getImageUrl = (path: string, size: "w200" | "w300" | "w500" | "w780" | "original" = "w500") => {
+export const getImageUrl = (path: string, size: "w185" | "w300" | "w500" | "w780" | "original" = "w185") => {
   if (!path) return "/placeholder.svg?height=300&width=200"
   return `${TMDB_IMAGE_BASE_URL}/${size}${path}`
 }

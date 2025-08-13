@@ -133,7 +133,7 @@ export default function TVDetailPage() {
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-3 w-100">
+            <div className="flex items-center gap-3 w-30">
               <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                 <Film className="w-5 h-5 text-white" />
               </div>
@@ -142,7 +142,7 @@ export default function TVDetailPage() {
             <SearchBar onResultClick={() => {}} />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-20">
             <Button
               variant="ghost"
               size="icon"
@@ -207,7 +207,7 @@ export default function TVDetailPage() {
                   <Badge
                     key={genre.id}
                     variant="secondary"
-                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors"
+                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors bg-gradient-to-r from-purple-900 to-indigo-600 hover:from-crimson-600 hover:to-red-700"
                     onClick={() => router.push(`/genre/${genre.id}?name=${encodeURIComponent(genre.name)}&type=tv`)}
                   >
                     {genre.name}
@@ -217,7 +217,7 @@ export default function TVDetailPage() {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button onClick={handlePlay} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handlePlay} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold">
                   <Play className="w-4 h-4 mr-2" />
                   Play
                 </Button>

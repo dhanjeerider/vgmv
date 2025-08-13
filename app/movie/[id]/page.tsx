@@ -140,7 +140,7 @@ export default function MovieDetailPage() {
               <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                 <Film className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold hidden md:block">vegamovies</span>
+              <span className="text-xl font-bold hidden md:block select-none">vegamovies</span>
             </div>
             <SearchBar onResultClick={() => {}} />
           </div>
@@ -215,7 +215,8 @@ export default function MovieDetailPage() {
                   <Badge
                     key={genre.id}
                     variant="secondary"
-                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors"
+                    className="cursor-pointer hover:bg-orange-500 hover:text-white transition-colors bg-gradient-to-r from-purple-900 to-indigo-600 hover:from-crimson-600 hover:to-red-700 select-none"
+
                     onClick={() => router.push(`/genre/${genre.id}?name=${encodeURIComponent(genre.name)}`)}
                   >
                     {genre.name}
@@ -225,11 +226,11 @@ export default function MovieDetailPage() {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button onClick={handlePlay} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handlePlay} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold">
                   <Play className="w-4 h-4 mr-2" />
                   Play
                 </Button>
-                <Button variant="outline" onClick={toggleWatchlist}>
+                <Button className="bg-gray-900 focus:bg-green-500 text-white" variant="outline" onClick={toggleWatchlist}>
                   <Heart className={`w-4 h-4 mr-2 ${isInWatchlist ? "fill-current text-red-500" : ""}`} />
                   Watchlist
                 </Button>
@@ -297,16 +298,16 @@ export default function MovieDetailPage() {
             {cast.length > 0 && (
               <div>
                 <h2 className="text-xl font-bold mb-3">Cast</h2>
-                <div className="flex gap-4 overflow-x-auto pb-4">
+                <div className="flex gap-4 overflow-x-auto pb-4 m-auto">
                   {cast.map((actor) => (
                     <div key={actor.id} className="flex-none text-center">
-                      <div className="w-20 h-20 rounded-full overflow-hidden mb-2 bg-muted">
+                      <div className="w-20 h-20 rounded-full overflow-hidden mb-2 m-auto bg-muted">
                         <Image
                           src={getImageUrl(actor.profile_path, "w185") || "/placeholder.svg"}
                           alt={actor.name}
                           width={80}
                           height={80}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover m-auto"
                         />
                       </div>
                       <p className="text-xs font-medium">{actor.name}</p>

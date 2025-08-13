@@ -62,7 +62,7 @@ export function MovieCard({ item, onPlay, onAddToWatchlist, className }: MovieCa
           <div className="relative h-full overflow-hidden rounded-lg">
             {!imageLoaded && <div className="absolute inset-0 bg-muted animate-pulse rounded-lg" />}
             <Image
-              src={getImageUrl(item.poster_path, "w185") || "/placeholder.svg"}
+              src={getImageUrl(item.poster_path, "w342") || "/placeholder.svg"}
               alt={title}
               fill
               className={cn(
@@ -85,7 +85,7 @@ export function MovieCard({ item, onPlay, onAddToWatchlist, className }: MovieCa
         </div>
 
         <div className="p-3 space-y-2">
-          <h3 className="font-semibold truncate text-foreground text-sm line-clamp-2 leading-tight">{title}</h3>
+          <h3 className="font-semibold truncate text-foreground text-sm line-clamp-2 leading-tight select-none">{title}</h3>
          
         </div>
       </div>

@@ -64,6 +64,9 @@ export default function TVShowsPage() {
   const [selectedItem, setSelectedItem] = useState<Movie | TVShow | null>(null)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   useEffect(() => {
     loadGenres()
@@ -71,6 +74,8 @@ export default function TVShowsPage() {
   }, [])
 
   useEffect(() => {
+    setPage(1)
+    setHasMore(true)
     loadTVShows()
   }, [activeTab, selectedGenre, selectedLanguage, sortBy, selectedYear])
 
@@ -83,45 +88,65 @@ export default function TVShowsPage() {
     }
   }
 
-  const loadTVShows = async () => {
-    setIsLoading(true)
+  const loadTVShows = async (pageNum = 1, append = false) => {
+    if (pageNum === 1) {
+      setIsLoading(true)
+    } else {
+      setIsLoadingMore(true)
+    }
+
     try {
       let response
       switch (activeTab) {
         case "popular":
-          response = await tmdbApi.getPopular("tv")
+          response = await tmdbApi.getPopular("tv", pageNum)
           break
         case "top":
-          response = await tmdbApi.getTopRated("tv")
+          response = await tmdbApi.getTopRated("tv", pageNum)
           break
         case "airing":
-          response = await tmdbApi.getTrending("tv", "week")
+          response = await tmdbApi.getTrending("tv", "week", pageNum)
           break
         case "genre":
           if (selectedGenre !== "all") {
-            response = await tmdbApi.getByGenre(Number.parseInt(selectedGenre), "tv")
+            response = await tmdbApi.getByGenre(Number.parseInt(selectedGenre), "tv", pageNum)
           } else {
-            response = await tmdbApi.getPopular("tv")
+            response = await tmdbApi.getPopular("tv", pageNum)
           }
           break
         case "language":
           if (selectedLanguage !== "all") {
-            const url = `https://api.themoviedb.org/3/discover/tv?api_key=7bffed716d50c95ed1c4790cfab4866a&with_original_language=${selectedLanguage}&sort_by=${sortBy}`
-            const res = await fetch(url)
+            const url = `https://api.themoviedb.org/3/discover/tv?api_key=7bffed716d50c95ed1c4790cfab4866a&with_original_language=${selectedLanguage}&sort_by=${sortBy}&page=${pageNum}`
+            const res = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`)
             response = await res.json()
           } else {
-            response = await tmdbApi.getPopular("tv")
+            response = await tmdbApi.getPopular("tv", pageNum)
           }
           break
         default:
-          response = await tmdbApi.getPopular("tv")
+          response = await tmdbApi.getPopular("tv", pageNum)
       }
 
-      setTVShows(response.results || [])
+      if (append) {
+        setTVShows((prev) => [...prev, ...response.results])
+      } else {
+        setTVShows(response.results || [])
+      }
+
+      setHasMore(pageNum < (response.total_pages || 1))
     } catch (error) {
       console.error("Error loading TV shows:", error)
     } finally {
       setIsLoading(false)
+      setIsLoadingMore(false)
+    }
+  }
+
+  const loadMoreTVShows = () => {
+    if (!isLoadingMore && hasMore) {
+      const nextPage = page + 1
+      setPage(nextPage)
+      loadTVShows(nextPage, true)
     }
   }
 
@@ -260,11 +285,32 @@ export default function TVShowsPage() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {tvShows.map((show) => (
-                <MovieCard key={show.id} item={show} onPlay={handlePlay} onAddToWatchlist={handleAddToWatchlist} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {tvShows.map((show) => (
+                  <MovieCard key={show.id} item={show} onPlay={handlePlay} onAddToWatchlist={handleAddToWatchlist} />
+                ))}
+              </div>
+
+              {hasMore && (
+                <div className="flex justify-center mt-8">
+                  <Button
+                    onClick={loadMoreTVShows}
+                    disabled={isLoadingMore}
+                    className="bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                        Loading...
+                      </>
+                    ) : (
+                      "Load More TV Shows"
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

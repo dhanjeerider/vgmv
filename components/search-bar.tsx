@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { tmdbApi, getImageUrl, type Movie, type TVShow } from "@/lib/tmdb"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 interface SearchBarProps {
   onResultClick?: (item: Movie | TVShow) => void
@@ -17,6 +18,7 @@ export function SearchBar({ onResultClick }: SearchBarProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,6 +59,11 @@ export function SearchBar({ onResultClick }: SearchBarProps) {
   const handleResultClick = (item: Movie | TVShow) => {
     setShowResults(false)
     setQuery("")
+
+    const isMovie = "title" in item
+    const path = isMovie ? `/movie/${item.id}` : `/tv/${item.id}`
+    router.push(path)
+
     onResultClick?.(item)
   }
 
